@@ -14,4 +14,5 @@ service:
     dns: http://localhost:8081
   message:
     dns: http://localhost:8082
-
+server:
+  port: 8081
