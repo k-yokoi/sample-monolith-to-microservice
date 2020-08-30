@@ -13,6 +13,13 @@ public class Application {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+                .route(p -> p.path("/topic/**")
+                        .or().path("/chat/messages/{segment}/**")
+                        .uri("ws://localhost:8082")
+                )
+                .route(p -> p.path("/chat/messages").or().path("/messages/**")
+                        .uri("http://localhost:8082")
+                )
                 .route(p -> p.path("/**")
                         .filters(f -> f.rewriteLocationResponseHeader("AS_IN_REQUEST", "Location", "localhost:8080", "http"))
                         .uri("http://localhost:8081")

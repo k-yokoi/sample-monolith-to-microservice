@@ -1,0 +1,117 @@
+DROP TABLE IF EXISTS CREDENTIAL;
+DROP TABLE IF EXISTS USR;
+DROP TABLE IF EXISTS USERGROUPRELATION;
+DROP TABLE IF EXISTS GROUP_TABLE;
+DROP TABLE IF EXISTS MESSAGE;
+DROP TABLE IF EXISTS MESSAGEBOARD;
+DROP TABLE IF EXISTS USER;
+
+
+-- 認証
+CREATE TABLE CREDENTIAL
+(
+    -- ユーザID
+    USER_ID bigint NOT NULL,
+    -- 認証タイプ
+    CREDENTIAL_TYPE varchar(512) NOT NULL,
+    -- 認証キー
+    CREDENTIAL_KEY varchar(512),
+    -- 有効日時
+    VALID_DATE timestamp,
+    -- バージョン
+    VER int,
+    -- 最終更新日時
+    LAST_UPDATED_DATE timestamp,
+    PRIMARY KEY (USER_ID, CREDENTIAL_TYPE)
+);
+
+-- ユーザ
+CREATE TABLE USR
+(
+	-- ユーザID
+	USER_ID bigint NOT NULL,
+	-- 名前
+	FIRST_NAME varchar(255),
+	-- 苗字
+	FAMILY_NAME varchar(255),
+	-- ログインID
+	LOGIN_ID varchar(32) UNIQUE,
+	-- ログイン中
+	IS_LOGIN boolean,
+    -- 管理者
+    IS_ADMIN boolean,
+    -- 画像ファイルパス
+    IMAGE_FILE_PATH varchar(512),
+	-- バージョン
+	VER int,
+	-- 最終更新日時
+	LAST_UPDATED_AT timestamp,
+	PRIMARY KEY (USER_ID)
+);
+
+ALTER TABLE CREDENTIAL
+    ADD FOREIGN KEY (USER_ID)
+        REFERENCES USR (USER_ID)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+;
+
+-- ユーザ
+CREATE TABLE USERGROUPRELATION
+(
+	-- ユーザID
+	USERID bigint NOT NULL,
+	-- Group ID
+	GROUPID varchar(255) NOT NULL ,
+	-- 最終更新日時
+	LASTUPDATEDAT timestamp,
+	PRIMARY KEY (USERID, GROUPID)
+);
+
+
+-- ユーザ
+CREATE TABLE GROUP_TABLE
+(
+	-- ユーザID
+	GROUPID varchar(255) NOT NULL,
+	-- Group ID
+	GROUPNAME varchar(255),
+	-- 最終更新日時
+	LASTUPDATEDAT timestamp,
+	PRIMARY KEY (GROUPID)
+);
+
+
+CREATE TABLE MESSAGE
+(
+	MESSAGEBOARDID varchar(255) NOT NULL,
+    CREATEDAT varchar(255) NOT NULL,
+	COMMENT varchar(255),
+	USERID bigint,
+	IMAGEPATH varchar(255),
+	VIDEOPATH varchar(255),
+	LIKECOUNT int,
+	LASTUPDATEDAT timestamp,
+	PRIMARY KEY (MESSAGEBOARDID, CREATEDAT)
+);
+
+
+CREATE TABLE MESSAGEBOARD
+(
+	MESSAGEBOARDID varchar(255) NOT NULL,
+    GROUPID varchar(255) NOT NULL,
+	TITLE varchar(255),
+	LASTUPDATEDAT timestamp,
+	PRIMARY KEY (MESSAGEBOARDID, GROUPID)
+);
+
+CREATE TABLE USER
+(
+	USERID bigint NOT NULL,
+    FIRSTNAME varchar(255),
+    FAMILYNAME varchar(255),
+    DISPLAYNAME varchar(255),
+    IMAGEFILEPATH varchar(255),
+    LASTUPDATEDAT timestamp,
+	PRIMARY KEY (USERID)
+);
